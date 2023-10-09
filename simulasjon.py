@@ -13,11 +13,12 @@ def main():
 	l = 10		# Fast l (lengde) for denne simulasjonen
 	c = 1		# Bølgens hastighet for denne simulasjonen
 	n_set = -1	# Når ikke -1, så overskriver denne summasjonen av bølgene fra n_start til n_end
-	n_start = 0	# Det under summasjonstegnet. Ofte n=0 eller n=1.
-	n_end = 5	# Det over summasjonstegnet. Ofte inf; bruker lavere tall enn inf for simulering
+	n_start = 1	# Det under summasjonstegnet. Ofte n=0 eller n=1.
+	n_end = 100000	# Det over summasjonstegnet. Ofte inf; bruker lavere tall enn inf for simulering
 
 	marker = -1	# Punkt langs x som skal utmerkes
 
+	stipla_toggle = 0 # Toggle stipla linjer av eller på.
 
 
 	#Kalibrering
@@ -56,8 +57,7 @@ def main():
 	ax.set_xticks(range(len(x_ticks)), x_ticks)
 	ax.grid()
 
-
-	print(f"Gjør {int(t_delta*millis*(n_end-n_start+1))} målinger.")
+	print(f"Gjør {int(t_delta**(stipla_toggle)*millis*(n_end-n_start+1))} målinger.")
 
 	for t in arange(0, t_period+t_period/(t_delta), t_period/(t_delta)):
 		u_list = []
@@ -86,6 +86,9 @@ def main():
 			ax.plot(x_list, u_list, color='k')
 		else:
 			ax.plot(x_list, u_list, color='k', linestyle='--', linewidth=0.2)
+		
+		if not stipla_toggle:
+			break
 
 	print("Ferdig, viser graf")
 	try:

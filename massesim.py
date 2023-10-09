@@ -12,7 +12,7 @@ def main():
 	#t er variabel av tid som stiger
 	l = 10		# Fast l (lengde) for denne simulasjonen
 	c = 1		# Bølgens hastighet for denne simulasjonen
-	n_start = 0	# Det under summasjonstegnet. Ofte n=0 eller n=1.
+	n_start = 1	# Det under summasjonstegnet. Ofte n=0 eller n=1.
 	n_end = 5	# Det over summasjonstegnet. Ofte inf; bruker lavere tall enn inf for simulering
 
 	marker = -1	# Punkt langs x som skal utmerkes
