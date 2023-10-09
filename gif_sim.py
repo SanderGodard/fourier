@@ -34,10 +34,10 @@ def main():
 	#x er variabel av rom bortover langs l
 	#t er variabel av tid som stiger
 	l = 10		# Fast l (lengde) for denne simulasjonen
-	c = 10		# Bølgens hastighet for denne simulasjonen
-	n_set = 1	# Når ikke -1, så overskriver denne summasjonen av bølgene fra n_start til n_end
+	c = 1		# Bølgens hastighet for denne simulasjonen
+	n_set = -1	# Når ikke -1, så overskriver denne summasjonen av bølgene fra n_start til n_end
 	n_start = 0	# Det under summasjonstegnet. Ofte n=0 eller n=1.
-	n_end = 50	# Det over summasjonstegnet. Ofte inf; bruker lavere tall enn inf for simulering
+	n_end = 5	# Det over summasjonstegnet. Ofte inf; bruker lavere tall enn inf for simulering
 
 	marker = l/2	# Punkt langs x som skal utmerkes
 
