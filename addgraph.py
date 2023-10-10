@@ -5,31 +5,25 @@ from matplotlib.lines import Line2D as line
 from numpy import arange
 from math import pi
 
-def main():
-#	lage args for n styring??
 
+# Script som viser alle småbølgene under resultatbølgen,
+# altså den viser i tillegg alle de stående bølgene som summeres til resultatet
+
+
+def main():
 	#x er variabel av rom bortover langs l
 	t = 0 #t er variabel av tid som stiger
 	l = 10		# Fast l (lengde) for denne simulasjonen
 	c = 1		# Bølgens hastighet for denne simulasjonen
-	n_set = -1	# Når ikke -1, så overskriver denne summasjonen av bølgene fra n_start til n_end
 	n_start = 0	# Det under summasjonstegnet. Ofte n=0 eller n=1.
 	n_end = 5	# Det over summasjonstegnet. Ofte inf; bruker lavere tall enn inf for simulering
 
 	marker = -1	# Punkt langs x som skal utmerkes
 
 
-
 	#Kalibrering
-	t_delta = 10	# Antall målinger per periode
-	t_period = 2*pi/c	# Periode i tid
 	millis = 10 # Målinger per enhet fra 0 til l. Øker smoothness i grafen
 			# Presisjon i sub-enhet av x mot l.
-
-#	t_max = 10/k 	# Variabel tid lengde for gif, gjør t_max * t_precision gif frames
-#	t_precision = 3*k # Variabel for tidspresisjon per tidsenhet
-
-
 
 
 	# Formatering av graf
@@ -52,16 +46,19 @@ def main():
 	ax.grid()
 
 
-	print(f"Gjør {int(millis*(n_end-n_start+1))} målinger.")
+	print(f"Gjør {int(millis*l*(n_end-n_start+1))} målinger.")
 	a = bolge(l, c)
 
+	big_u_list = []
 	for run in range(n_start, n_end+1):
 		u_list = []
 		x_list = []
+		big_u_list.append([])
 		for x in arange(0, l+1, 1/float(millis)):
 			x = round(x, 2)
 
 			u_sum = a.un(x, t, run)
+			big_u_list[run-n_start].append(u_sum)
 
 			if float(marker) == float(x) and marker != -1 and marker <= l and marker >= 0:
 				marker_u = u_sum
@@ -76,30 +73,16 @@ def main():
 
 		lin = ax.plot(x_list, u_list, linestyle='--', linewidth=0.7)
 
+	# Så ta into account den sammenlagte bølgen.
+	sum_u_list = [0 for n in range((l+1)*millis)]
+	for run in big_u_list:
+		for i, val in enumerate(run):
+			sum_u_list[i] += val
+	ax.plot(x_list, sum_u_list, color='k')
 
-	#Og så en gang til for den sammenlagte
-	u_list = []
-	x_list = []
-	for x in arange(0, l+1, 1/float(millis)):
-		x = round(x, 2)
-
-		u_sum = a.u(x, t, n_end, n_start)*(n_end) # Sum fra n_start til n_end
-
-		if float(marker) == float(x) and marker != -1 and marker <= l and marker >= 0:
-			marker_u = u_sum
-
-		u_list.append(u_sum)
-		x_list.append(x)
-
-		print(f"{int(x/((l+1)*millis)*100)}%", end="\r")
 
 	if marker != -1 and marker < l and marker > 0:
 		point = ax.scatter(marker, marker_u, color='k')
-
-
-	ax.plot(x_list, u_list, color='k')
-
-
 
 	print("Ferdig, viser graf")
 	try:

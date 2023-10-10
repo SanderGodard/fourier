@@ -1,6 +1,9 @@
 #!/usr/bin/env python3
 from math import sin, cos, pi
-from fakultet import fac
+
+# Bølgeberegninger. Er her man bytter ut eksempelbølgene.
+# For å benytte seg av ulike initialverdier må man endre A og B "funksjonstallene" på linje 60.
+
 def main():
 	print("Test av __str__:", bolge(1, 0, 10))
 	return
@@ -23,53 +26,39 @@ class bolge:
 		return float(0) # La være konst for generell form
 
 # Eksempel 1
-	# def f(self, x):
-	# 	l = self.l
-	# 	if x < l/2:
-	# 		return x**3
-	# 	else:
-	# 		return x/4 + 1/4
-		
 	def A1(self, n):
 		l = self.l
-		ledd1 = -(l**3*(cos(n*pi/2)*n*pi**3 - 6*sin(n*pi/2)*n*pi**2 - 24*n*pi*cos(n*pi/2) + 48*sin(n*pi/2)))/(4*n*pi**4)
-		ledd2 = (n*pi*cos(n*pi/2)*l - 2*n*pi*cos(n*pi)*l - 2*sin(n*pi/2)*l + 2*sin(n*pi)*l + 2*n*pi*cos(n*pi/2) - 2*n*pi*cos(n*pi))/(4*n*pi**2)
-		return ledd1 + ledd2
+		return (2*(2*sin((pi*n)/2)-2*sin(pi*n)+pi*n*cos((pi*n)/2)))/(pi**2*n**2)-(2*(pi*n*(pi**2*n**2-24)*cos((pi*n)/2)-6*(pi**2*n**2-8)*sin((pi*n)/2)))/(pi**4*n**4)
 	
-	# def g(self, t):
-	# 	return 0
-
 	def B1(self, n):
 		return 0
 
 # Eksempel 2
-	# def f(self, x):
-	# 	return 0
-
 	def A2(self, n):
 		return 0
 	
-	# def g(self, t):
-	# 	l = self.l
-	# 	if t < l/4:
-	# 		return 2*t
-	# 	else:
-	# 		return 2*t/3 + t/3
-
 	def B2(self, n):
 		l = self.l
 		c = self.c
-		ledd1 = -((n*pi*cos(n*pi/4) - 4*sin(n*pi/4))*l**2)/(c*n**2*pi**3)
-		ledd2 = (l*(n*pi*cos(n*pi/4)*l - 4*n*pi*cos(n*pi)*l - 4*sin(n*pi/4)*l + 4*sin(n*pi)*l + 4*sin(n*pi)*l + 4*n*pi*cos(n*pi/4) - 4*n*pi*cos(n*pi)))/(3*c*n**2*pi**3)
-		return ledd1 + ledd2
+		return (4*l*(pi*n-sin(pi*n)))/(pi**3*c*n**3)
+
+# Eksempel 3
+	def A3(self, n):
+		l = self.l
+		return 2/l*(l*(4*pi*n*sin(l/2)*cos(pi*n)-2*l*cos(l/2)*sin(pi*n)))/(l**2-4*pi**2*n**2)
+
+	def B3(self, n):
+		l = self.l
+		c = self.c
+		return 2/(n*pi*c)*(l*(l*sin(l)*sin(pi*n)+pi*n*cos(l)*cos(pi*n)-pi*n))/(l**2-pi**2*n**2)
 
 
 
 	def G(self, t, n):
 		l = self.l
 		c = self.c
-		B = self.B1(n) # Endre her basert på hvilket eksempel som er i bruk!
-		A = self.A1(n)
+		B = self.B(n) # Endre her basert på hvilket eksempel som er i bruk!
+		A = self.A(n) # A2 betyr eksempel 2, se eksempler definert over.
 		return A*cos(n*pi*c*t/l) + B*sin(n*pi*c*t/l)
 
 	def F(self, x, n):

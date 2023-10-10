@@ -8,7 +8,9 @@ from PIL import Image
 from sys import argv
 from tempfile import TemporaryDirectory
 
-def make_gif(tmp, gifname): # https://www.blog.pythonlibrary.org/2021/06/23/creating-an-animated-gif-with-python/
+# Simuler n antall bølger samtidig under hverandre.
+
+def make_gif(tmp, gifname): # https://www.blog.pythonlibrary.org/2021/06/23/creating-an-animated-gif-with-python/ med modifikasjoner
 	l = [image for image in glob(f"{tmp}/frame_*.png")]
 	l2 = [image for image in glob(f"{tmp}/frame_*.png")]
 	# Sort
@@ -29,18 +31,18 @@ def make_gif(tmp, gifname): # https://www.blog.pythonlibrary.org/2021/06/23/crea
 
 
 def main():
-#	lage args for n styring??
+#	Etterhver kanskje lage args for n styring?
 
 	#x er variabel av rom bortover langs l
 	#t er variabel av tid som stiger
 	l = 10		# Fast l (lengde) for denne simulasjonen
 	c = 1		# Bølgens hastighet for denne simulasjonen
 	n_set = -1	# Når ikke -1, så overskriver denne summasjonen av bølgene fra n_start til n_end
-	n_start = 1	# Det under summasjonstegnet. Ofte n=1.
-	n_end = 20	# Det over summasjonstegnet. Ofte inf; bruker lavere tall enn inf for simulering
+	n_start = 0	# Det under summasjonstegnet. Ofte n=1.
+	n_end = 5	# Det over summasjonstegnet. Ofte inf; bruker lavere tall enn inf for simulering
 
-	marker = l/2	# Punkt langs x som skal utmerkes
-
+	marker = -1	# Punkt langs x som skal utmerkes
+	filnavn = "sum_harmoniske_bolger.gif"
 
 
 	#Kalibrering
@@ -61,13 +63,11 @@ def main():
 	ax = fig.add_subplot(1, 1, 1)
 	if marker != -1 and marker < l and marker > 0:
 		ax.legend(handles=[line([0], [0], markerfacecolor='k', marker='o', color='w', label=f"Punkt ( {marker}, u({marker}, t) ) er markert")], loc='upper right')
+	# ax.set_title("Plotting av u(x, t)")
 	ax.set_ylabel("u(x, t)")
 	ax.set_xlabel("x")
-	if not n_set == -1:
-		ax.set_ylim(-1.2, 1.2) # Kan justeres for hver enkelt egt.
-	else:
-		ax.set_ylim(-1*(n_end-1)-0.2, 1*(n_end-1)+0.2) # Kan justeres for hver enkelt egt.
 	ax.set_xlim(0, l)
+	# ax.set_ylim(-1.2, 1.2) # Kan justeres for hver enkelt egt.
 #	ax.tight_layout()
 	x_tick_detail = 10 # amount of ticks from 0 to l
 	x_ticks = []
@@ -79,15 +79,15 @@ def main():
 
 
 
-	print(f"Gjør {int(t_delta*millis*(n_end-n_start+1))} målinger.")
+	print(f"Gjør {int(t_delta*millis*l*(n_end-n_start+1))} målinger.")
 
 	temp_dir = TemporaryDirectory()
 
 	for t in arange(0, t_period+t_period/(t_delta), t_period/(t_delta)):
-		if n_set != -1:
-			ax.set_title(f"Plotting av u_n(x, t), n = {n_set}, t = {round(t, 2)}s")
-		else:
-			ax.set_title(f"Plotting av u(x, t), t = {round(t, 2)}s")
+		# if n_set != -1:
+		# 	ax.set_title(f"Plotting av u_n(x, t), n = {n_set}, t = {round(t, 2)}s")
+		# else:
+		ax.set_title(f"Plotting av u(x, t) med visning av stående bølger bak, t = {round(t, 2)}s")
 		u_list = []
 		u2_list = []
 		if n_set == -1:
@@ -129,10 +129,11 @@ def main():
 		lines = ax.plot(x_list, u_list, color='k')
 		if n_set == -1:
 			lines2 = []
+			cl = ['blue', 'orange', 'green', 'red', 'purple', 'brown', 'pink', 'gray', 'olive', 'cyan']
 			for n in range(n_start, n_end+1):
-				lines2.append(ax.plot(x_list, u2_list[n-1], color='k', linestyle='--', linewidth=0.7))
+				lines2.append(ax.plot(x_list, u2_list[n-1], linestyle='--', color=cl[n%len(cl)], linewidth=0.5))
 		else:
-			lines2 = ax.plot(x_list, u2_list, color='k', linestyle='--', linewidth=0.7)
+			lines2 = ax.plot(x_list, u2_list, linestyle='--', linewidth=0.5)
 
 		plt.savefig(f"{temp_dir.name}/frame_{t}.png")
 
@@ -146,10 +147,14 @@ def main():
 			lines2.pop(0).remove() # Fjerner graf igjen
 
 	print("Lager gif")
-	if n_set != -1:
-		make_gif(temp_dir.name, f"waves_n_{n_set}.gif")
+	if filnavn == "":
+		if n_set != -1:
+			make_gif(temp_dir.name, f"waves_n_{n_set}.gif")
+		else:
+			make_gif(temp_dir.name, f"waves_sum_all_{n_end}.gif")
 	else:
-		make_gif(temp_dir.name, f"waves_sum_{n_end}.gif")
+		make_gif(temp_dir.name, filnavn)
+		
 
 	print("Ferdig")
 	temp_dir.cleanup()

@@ -8,6 +8,9 @@ from PIL import Image
 from sys import argv
 from tempfile import TemporaryDirectory
 
+# Simuler enkeltbølger over T tid. Med/uten skygge
+# Husk at for å endre hvilke initialbetingelser man simulerer for, så må man endre dette i bolge.py filen!
+
 def make_gif(tmp, gifname): # https://www.blog.pythonlibrary.org/2021/06/23/creating-an-animated-gif-with-python/
 	l = [image for image in glob(f"{tmp}/frame_*.png")]
 	l2 = [image for image in glob(f"{tmp}/frame_*.png")]
@@ -39,8 +42,10 @@ def main():
 	n_start = 1	# Det under summasjonstegnet. Ofte n=1.
 	n_end = 20	# Det over summasjonstegnet. Ofte inf; bruker lavere tall enn inf for simulering
 
-	marker = l/2	# Punkt langs x som skal utmerkes
+	marker = -1	# Punkt langs x som skal utmerkes
 
+	show_evil_twin = 0
+	filnavn = "eks.gif"
 
 
 	#Kalibrering
@@ -64,6 +69,7 @@ def main():
 	ax.set_ylabel("u(x, t)")
 	ax.set_xlabel("x")
 	ax.set_xlim(0, l)
+	# ax.set_ylim(-1.2, 1.2)
 #	ax.tight_layout()
 	x_tick_detail = 10 # amount of ticks from 0 to l
 	x_ticks = []
@@ -75,7 +81,7 @@ def main():
 
 
 
-	print(f"Gjør {int(t_delta*millis*(n_end-n_start+1))} målinger.")
+	print(f"Gjør {int(t_delta*millis*l*(n_end-n_start+1))} målinger.")
 
 	temp_dir = TemporaryDirectory()
 
@@ -85,34 +91,46 @@ def main():
 		else:
 			ax.set_title(f"Plotting av u(x, t), t = {round(t, 2)}s")
 		u_list = []
+		u2_list = []
 		x_list = []
 		for x in arange(0, l+1, 1/float(millis)):
 			x = round(x, 2)
 
 			a = bolge(l, c)
 			u_sum = a.u(x, t, n_end, n_start)*n_end # Sum fra n_start til n_end
+			if show_evil_twin:
+				u2_sum = a.u(x, t_period-t, n_end, n_start)*n_end # Sum fra n_start til n_end
 
 			if float(marker) == float(x) and marker != -1 and marker <= l and marker >= 0:
 				marker_u = u_sum
 			u_list.append(u_sum)
+			if show_evil_twin:
+				u2_list.append(u2_sum)
 			x_list.append(x)
 
 		# print("LISTE:", u2_list[1])
 		if marker != -1 and marker < l and marker > 0:
 			point = ax.scatter(marker, marker_u, color='k')
 		lines = ax.plot(x_list, u_list, color='k')
+		if show_evil_twin:
+			lines2 = ax.plot(x_list, u2_list, color='k',  linestyle='--', linewidth=0.7)
 
 		plt.savefig(f"{temp_dir.name}/frame_{t}.png")
 
 		if marker != -1 and marker < l and marker > 0:
 			point.remove()
 		lines.pop(0).remove() # Fjerner graf igjen
+		if show_evil_twin:
+			lines2.pop(0).remove()
 
 	print("Lager gif")
-	if n_set != -1:
-		make_gif(temp_dir.name, f"waves_n_{n_set}.gif")
+	if filnavn == "":
+		if n_set != -1:
+			make_gif(temp_dir.name, f"waves_n_{n_set}.gif")
+		else:
+			make_gif(temp_dir.name, f"waves_sum_all_{n_end}.gif")
 	else:
-		make_gif(temp_dir.name, f"waves_sum_{n_end}.gif")
+		make_gif(temp_dir.name, filnavn)
 
 	print("Ferdig")
 	temp_dir.cleanup()
