@@ -34,10 +34,12 @@ def main():
 
 		#Kalibrering
 		t_delta = 15	# Antall målinger per periode
+		# # simulerer halv periode her for å ikke tegne duplikat streker
 		if not n_set == 0 and not c == 0:
-			t_period = 1/2 * (10*2)/(c*n_set)	# Periode i tid
+			t_period =(l)/(c*n_set)	# Periode i tid, trikser litt her for å fordele strekene bedre.
 		else:
-			t_period = 1
+			t_period = (l)/(c)	# Periode i tid
+
 
 	# Formatering av graf
 		if cols > 1:

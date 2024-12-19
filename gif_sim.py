@@ -40,22 +40,21 @@ def main():
 	c = 1		# Bølgens hastighet for denne simulasjonen
 	n_set = -1	# Når ikke -1, så overskriver denne summasjonen av bølgene fra n_start til n_end
 	n_start = 1	# Det under summasjonstegnet. Ofte n=1.
-	n_end = 20	# Det over summasjonstegnet. Ofte inf; bruker lavere tall enn inf for simulering
+	n_end = 50	# Det over summasjonstegnet. Ofte inf; bruker lavere tall enn inf for simulering
 
 	marker = -1	# Punkt langs x som skal utmerkes
 
 	show_evil_twin = 0
-	filnavn = "eks.gif"
+	filnavn = "z_periode_gif.gif"
 
 
 	#Kalibrering
 	if not n_set == -1:
 		t_delta = float(10*max(1, n_set))	# Antall målinger per periode
-		t_period = 1/2 * (10*2)/(c*max(1, n_set))	# Periode i tid
-		print(f"{t_delta=}, {t_period=}")
+		# print(f"{t_delta=}, {t_period=}")
 	else:
 		t_delta = float(10*n_end)
-		t_period = 1/2 * (10*2)/(c)
+	t_period = (l*2)/(c)	# Periode i tid
 
 	millis = 10 # Målinger per enhet fra 0 til l. Øker smoothness i grafen
 			# Presisjon i sub-enhet av x mot l.

@@ -47,16 +47,15 @@ def main():
 
 	#Kalibrering
 	if not n_set == -1:
-		t_delta = float(10*max(1, n_set))	# Antall målinger per periode
-		t_period = 1/2 * (10*2)/(c*max(1, n_set))	# Periode i tid
+		t_delta = float(10*max(1, n_set))	
+		t_period = (l*2)/(c*max(1, n_set))	
 		print(f"{t_delta=}, {t_period=}")
 	else:
-		t_delta = float(10*n_end)
-		t_period = 1/2 * (10*2)/(c)
+		t_delta = float(10*n_end)			# Antall målinger per periode
+		t_period = (l*2)/(c)				# Periode i tid
 
 	millis = 10 # Målinger per enhet fra 0 til l. Øker smoothness i grafen
 			# Presisjon i sub-enhet av x mot l.
-
 
 	# Formatering av graf
 	fig = plt.figure()

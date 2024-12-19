@@ -30,10 +30,7 @@ def main():
 
 		#Kalibrering
 		t_delta = 15	# Antall målinger per periode
-		if not n_set == 0 and not c == 0:
-			t_period = 1/2 * (10*2)/(c*n_set)	# Periode i tid
-		else:
-			t_period = 1
+		t_period = (2*l)/c
 
 	# Formatering av graf
 		if cols > 1:
@@ -51,7 +48,7 @@ def main():
 			ax.set_ylim(-1.2, 1.2) # Kan justeres for hver enkelt egt.
 			ax.set_xlim(0, t_period)
 		#	ax.tight_layout()
-			x_tick_detail = 10 # amount of ticks from 0 to l
+			x_tick_detail = t_period # amount of ticks from 0 to l
 			x_ticks = []
 			for val in arange(0, float(t_period), float(t_period)/float(x_tick_detail)):
 				x_ticks.append(str(round(val, 2)))
@@ -78,7 +75,12 @@ def main():
 
 		u_list = []
 		x_list = []
-		for x in arange(0, l+1, 1/float(millis)):
+		if hnum%2:
+			lengde = t_period
+		else:
+			lengde = l
+		lengde += 1/float(millis)
+		for x in arange(0, lengde, 1/float(millis)):
 			x = round(x, 2)
 
 			if hnum%2:
